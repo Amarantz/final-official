@@ -17,3 +17,5 @@ coverage:
         - public/*
         - plugins/*
         - config/*
+    exclude:
+        - test/*

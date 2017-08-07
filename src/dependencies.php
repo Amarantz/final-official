@@ -1,16 +1,24 @@
 <?php
 
 $dic = $app->getContainer();
-$conf = new Settings();
+$settings = $dic->get('settings')['database'];
 
-$dic['mysql'] = function ($dic) use ($conf) {
-    $c = $conf->getConf();
-    $pdo = \storage\connectToMysql($c['mysql']['dsn'], $c['mysql']['username'], $c['mysql']['pass']);
+$dic['mysql'] = function ($dic) use ($settings) {
+    $c = $settings[0]['connections']['mysql'];
+    $pdo = new PDO(
+        $c['driver'].':host='.$c['host'].';dbname='.$c['database'].';port='.$c['port'],
+        $c['username'],
+        $c['password']
+    );
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     return $pdo;
 };
 
-$dic['redis'] = function ($dic) use ($conf) {
-    $c = $conf->getConf();
-    $redis = \storage\connectToRedis($c['redis']['host'], $c['redis']['port']);
+$dic['redis'] = function ($dic) use ($settings) {
+    $c = $settings[0]['connections']['redis'];
+    $redis = \storage\connectToRedis($c['default']['host'], $c['default']['port']);
     return $redis;
 };
+
+
