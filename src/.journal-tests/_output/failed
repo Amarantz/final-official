@@ -1,0 +1,2 @@
+tests\acceptance\FirstCest.php:frontpageWorks
+tests\unit\settingsCest.php:tryToTest

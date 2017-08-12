@@ -10,12 +10,15 @@ extensions:
         - Codeception\Extension\RunFailed
 coverage:
     enable: true
+    low_limit: 50
+    high_limit: 70
     include:
         - domain/*
         - plugins/*
         - storage/*
         - public/*
-        - plugins/*
         - config/*
     exclude:
-        - test/*
+        - tests/*
+        - vendor/*
+        - docs/*

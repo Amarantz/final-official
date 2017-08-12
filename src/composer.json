@@ -15,10 +15,11 @@
     "slim/php-view": "^2.0",
     "monolog/monolog": "^1.17",
     "friendsofphp/php-cs-fixer": "^2.4",
-    "squizlabs/php_codesniffer": "*"
+    "squizlabs/php_codesniffer": "*",
+    "peridot-php/peridot": "^1.19",
+    "codeception/codeception": "2.3.5"
   },
   "require-dev": {
-    "codeception/codeception": "2.3.4",
     "phpunit/php-token-stream": "1.4.11"
   },
   "autoload": {

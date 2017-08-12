@@ -1,5 +1,9 @@
 <?php
-
+require __DIR__.'/infustructure/storage/client/MysqlAdapter.php';
+require __DIR__.'/infustructure/storage/chatroom/MysqlAdapter.php';
+require __DIR__.'/infustructure/storage/user/RedisAdapter.php';
+require __DIR__.'/infustructure/storage/message/MysqlAdapter.php';
+require __DIR__.'/domain/user.php';
 $dic = $app->getContainer();
 $settings = $dic->get('settings')['database'];
 
@@ -17,8 +21,41 @@ $dic['mysql'] = function ($dic) use ($settings) {
 
 $dic['redis'] = function ($dic) use ($settings) {
     $c = $settings[0]['connections']['redis'];
-    $redis = \storage\connectToRedis($c['default']['host'], $c['default']['port']);
+    $redis = new Redis();
+    $redis->connect($c['default']['host'], $c['default']['port']);
     return $redis;
 };
 
+$dic['newUser'] = function ($dic){
+    $user = new \domain\user();
+    return $user;
+};
 
+$dic['newMessage'] = function($dic){
+    $message = new \domain\Messsage();
+    return $message;
+};
+
+$dic['newChatroom'] = function($dic) {
+    $chatroom = new domain\Chatroom();
+    return $chatroom;
+};
+
+$dic['userAdapter'] = function($dic)  {
+    $mysql = new \Infustructure\Storage\User\RedisAdapter($dic->redis);
+    return $mysql;
+};
+
+$dic['chatroomAdapter'] = function($dic) {
+    $mysql = new \Infustructure\Storage\Chatroom\MysqlAdapter($dic->mysql);
+    return $mysql;
+};
+
+$dic['api_key_Validation'] = function ($dic){
+    $mysql = new \Infustructure\Storage\Client\MysqlAdapter($dic->mysql);
+    return $mysql;
+};
+
+$dic['messageAdapter'] = function ($dic){
+    $mysql = new \Infustructure\Storage\Message\MysqlAdapter($dic->mysql);
+};

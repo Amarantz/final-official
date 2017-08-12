@@ -15,7 +15,7 @@ class FirstCest
     public function frontpageWorks(AcceptanceTester $I)
     {
         $I->amOnPage('/');
-        $I->see("Page Not found");
+        $I->see("WE HAVE NOTHING YOU WANT");
     }
     public function tryToTest(AcceptanceTester $I)
     {

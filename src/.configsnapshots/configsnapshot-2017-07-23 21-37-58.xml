@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<pearconfig version="1.0"><php_dir>C:\docker\final\src\php</php_dir><ext_dir>C:\php\ext</ext_dir><cfg_dir>C:\docker\final\src\cfg</cfg_dir><doc_dir>C:\docker\final\src\docs</doc_dir><bin_dir>C:\php</bin_dir><data_dir>C:\docker\final\src\data</data_dir><www_dir>C:\docker\final\src\www</www_dir><test_dir>C:\docker\final\src\tests</test_dir><src_dir>C:\docker\final\src\src</src_dir><php_bin>C:\php\php.exe</php_bin><php_ini>C:\php\php.ini</php_ini><php_prefix></php_prefix><php_suffix></php_suffix></pearconfig>

@@ -22,22 +22,20 @@ class chatroomTest extends \Codeception\Test\Unit
     // tests
     public function testChatroomName()
     {
-
-        $this->assertClassHasAttribute('members','domain\chatroom','Missing Userlist');
+        $this->assertClassHasAttribute('members', 'domain\chatroom', 'Missing Userlist');
         $this->assertClassHasAttribute('subject', 'domain\chatroom', 'missing subject');
         $this->assertClassHasAttribute('messages', 'domain\chatroom', 'Missing Messages');
         $this->assertClassHasAttribute('uuid', 'domain\chatroom', 'missing uuid');
         $this->assertClassHasAttribute('owners', 'domain\chatroom', 'missing owner');
-        $this->assertClassHasAttribute('name','domain\chatroom','missing name');
+        $this->assertClassHasAttribute('name', 'domain\chatroom', 'missing name');
         $this->assertClassHasAttribute('lastActive', 'domain\chatroom', 'missing lastActive');
-        $this->assertClassHasAttribute('created', 'domain\chatroom','missing created');
+        $this->assertClassHasAttribute('created', 'domain\chatroom', 'missing created');
 
         $expected = 'Bobship';
         $this->harness->setName($expected);
         $actule = $this->harness->name();
 
         $this->assertEquals($expected, $actule);
-
     }
 
     public function testChatroomSubject()
@@ -59,7 +57,7 @@ class chatroomTest extends \Codeception\Test\Unit
         $this->harness->addOwner($mem);
         $act =  $this->harness->owners();
 
-        $this->assertEquals($expect,$act);
+        $this->assertEquals($expect, $act);
 
         $mem2 = new \domain\user();
         $mem2->setUsername('Sweet');
@@ -67,7 +65,7 @@ class chatroomTest extends \Codeception\Test\Unit
         $this->harness->addOwner($mem2);
         $expect[] = $mem2;
         $act = $this->harness->owners();
-        $this->assertEquals($expect,$act);
+        $this->assertEquals($expect, $act);
     }
 
     public function testChatroomRemoveOwner()
@@ -79,7 +77,7 @@ class chatroomTest extends \Codeception\Test\Unit
         $this->harness->addOwner($mem);
         $act =  $this->harness->owners();
 
-        $this->assertEquals($expect,$act);
+        $this->assertEquals($expect, $act);
 
         $mem2 = new \domain\user();
         $mem2->setUsername('Sweet');
@@ -87,18 +85,16 @@ class chatroomTest extends \Codeception\Test\Unit
         $this->harness->addOwner($mem2);
         $expect[] = $mem2;
         $act = $this->harness->owners();
-        $this->assertEquals($expect,$act);
+        $this->assertEquals($expect, $act);
 
         unset($expect);
         $ok = $this->harness->removeOwner($mem);
-        $this->assertEquals(true,$ok);
+        $this->assertEquals(true, $ok);
         $expect = [$mem2];
 
         //$act = $this->harness->owners();
 
         //$this->assertEquals($expect,$act);
-
-
     }
 
     public function testChatroomJoin()
@@ -115,8 +111,6 @@ class chatroomTest extends \Codeception\Test\Unit
         $act = $this->harness->members();
 
         $this->assertEquals($expect, $act);
-
-
     }
 
     public function testChatroomID()
@@ -145,7 +139,7 @@ class chatroomTest extends \Codeception\Test\Unit
 
 
         $ok = $this->harness->leave($mem2);
-        $this->assertEquals(true,$ok);
+        $this->assertEquals(true, $ok);
         $act = $this->harness->members();
         //$expect = [$mem1,$mem3];
 

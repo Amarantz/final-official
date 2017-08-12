@@ -35,7 +35,7 @@ class User
     public function setEmail($email)
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception("Not a valid email Address");
+            return $this;
         }
         $this->email = $email;
         return $this;
@@ -54,7 +54,7 @@ class User
     public function setUserID($userID)
     {
         if (!is_numeric($userID)) {
-            throw new Exception("not a valid numeric value " . $userID);
+            return $this;
         }
         $this->userID = $userID;
         return $this;
@@ -71,10 +71,21 @@ class User
     }
     public function setUUID($uuid)
     {
-        if (empty($uuid)) {
-            throw new Exception("Null UUID was passed");
+        if (!isset($uuid)) {
+            throw new \Exception("Missing UUID to attach");
         }
         $this->uuid = $uuid;
         return $this;
+    }
+
+    public function jsonString()
+    {
+        $arr[] = [
+            "userID" => $this->userID,
+            "username" => $this->username,
+            "email" => $this->email,
+            "uuid" => $this->uuid
+        ];
+        return json_encode($arr, JSON_PRETTY_PRINT);
     }
 }

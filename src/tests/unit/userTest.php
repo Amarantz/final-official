@@ -27,43 +27,39 @@ class userTest extends \Codeception\Test\Unit
         $this->assertNotNull($user->getUUID(), "We should have something here");
     }
 
-    public function testSettingUsername(){
+    public function testSettingUsername()
+    {
         $user = new \domain\user();
-        try{
+        try {
             $user->setUserID('string');
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             $this->assertEquals("not a valid numeric value string", $e->getMessage());
         }
 
-        try{
+        try {
             $user->setUserID(null);
-        }catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->assertEquals("not a valid numeric value ", $e->getMessage());
         }
-        try{
+        try {
             $user->setUserID(1231);
-        } catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->assertEquals("not a valid numeric value ", $e->getMessage());
         }
         $user->setUsername("SweetKing99");
 
-        $this->assertEquals('1231',$user->getUserID());
-        $this->assertNotNull($user->getUsername(),"We should have a usersname");
-
-
+        $this->assertEquals('1231', $user->getUserID());
+        $this->assertNotNull($user->getUsername(), "We should have a usersname");
     }
 
     public function testTwoUserObjectAreNotTheSame()
     {
         $userA = new \domain\user();
         $userB = new \domain\user();
-        $this->assertNotNull($userA->getUUID(),"This should have a value");
-        $this->assertNotNull($userB->getUUID(),"This should have a value");
+        $this->assertNotNull($userA->getUUID(), "This should have a value");
+        $this->assertNotNull($userB->getUUID(), "This should have a value");
 
-        $this->assertEquals(false, $userA->getUUID() == $userB->getUUID(),"We should have 2 unique IDs" );
-
+        $this->assertEquals(false, $userA->getUUID() == $userB->getUUID(), "We should have 2 unique IDs");
     }
 
     public function testSettingEmail()
@@ -77,23 +73,21 @@ class userTest extends \Codeception\Test\Unit
 
         try {
             $user->setEmail("email@email.com");
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             $this->assertEquals("Not a valid email Address", $e->getMessage());
         }
 
-        $this->assertEquals("email@email.com",$user->getEmail());
-
+        $this->assertEquals("email@email.com", $user->getEmail());
     }
 
     public function testAll()
     {
         $user = new \domain\user();
 
-        try{
-            $user->setUsername("SomeString")->setEmail("email@email.com")->setUserID(12341)->setUUID();
-        }catch (\Exception $e){
+        try {
+            $user->setUsername("SomeString")->setEmail("email@email.com")->setUserID(12341)->setUUID('12345123aadfa');
+        } catch (\Exception $e) {
             $this->assertNotNull($e, "Expected Error has Occurred");
         }
-
     }
 }
