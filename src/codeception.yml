@@ -10,15 +10,17 @@ extensions:
         - Codeception\Extension\RunFailed
 coverage:
     enable: true
-    low_limit: 50
-    high_limit: 70
+    remote: true
+    c3_url: 'http://127.0.0.1/index.php'
     include:
         - domain/*
-        - plugins/*
-        - storage/*
-        - public/*
+        - infustructure/*
         - config/*
+        - public/*
+        - plugins/*
+        - routes.php
+        - settings.php
+        - dependencies.php
     exclude:
-        - tests/*
         - vendor/*
         - docs/*

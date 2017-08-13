@@ -88,4 +88,13 @@ class User
         ];
         return json_encode($arr, JSON_PRETTY_PRINT);
     }
+
+    public function arr()
+    {
+        return [
+            "username" => $this->username,
+            "email" => $this->email,
+            "uuid" => $this->uuid
+        ];
+    }
 }

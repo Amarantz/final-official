@@ -4,6 +4,8 @@ require __DIR__.'/infustructure/storage/chatroom/MysqlAdapter.php';
 require __DIR__.'/infustructure/storage/user/RedisAdapter.php';
 require __DIR__.'/infustructure/storage/message/MysqlAdapter.php';
 require __DIR__.'/domain/user.php';
+require __DIR__.'/domain/message.php';
+require __DIR__.'/domain/chatroom.php';
 $dic = $app->getContainer();
 $settings = $dic->get('settings')['database'];
 
@@ -58,4 +60,5 @@ $dic['api_key_Validation'] = function ($dic){
 
 $dic['messageAdapter'] = function ($dic){
     $mysql = new \Infustructure\Storage\Message\MysqlAdapter($dic->mysql);
+    return $mysql;
 };

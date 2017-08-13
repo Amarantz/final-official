@@ -7,8 +7,8 @@
  */
 
 namespace Infustructure\Storage\Chatroom;
-
 use Domain\Chatroom;
+use domain\user;
 use PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting\DocCommentAlignmentSniff;
 
 require __DIR__.'/ChatroomRepoPort.php';
@@ -47,6 +47,18 @@ class MysqlAdapter implements ChatroomRepoPort
         $cr->setUUID($result['UUID'])->setName($result['name'])->setSubject($result['subject'])
             ->setchatroomID($result['chatroomID'])->setActive($result['active'])
             ->setLastActiveDate($result['lastActiveDate']);
+        $sql = 'select userUUID from chatroomUsers where chatroomID=:ID';
+        $st = $this->mysql->prepare($sql);
+        $st->bindParam(':ID',$id);
+        $st->execute();
+        $result = $st->fetchAll();
+
+        foreach($result as $m)
+        {
+            $u = new user();
+            $u->setUUID($m['userUUID']);
+            $cr->join($u);
+        }
         return $cr;
     }
 
@@ -56,7 +68,7 @@ class MysqlAdapter implements ChatroomRepoPort
         $st = $this->mysql->prepare($sql);
         $st->execute();
         $result = $st->fetchAll();
-        $arr[] = [];
+        $arr;
         foreach ($result as $data) {
             $c = new Chatroom();
             $c->setUUID($data['uuid'])->setName($data['name'])
@@ -84,21 +96,43 @@ class MysqlAdapter implements ChatroomRepoPort
 
     public function updateChatroom(Chatroom $chatroom)
     {
+        if  (!$chatroom->updateFlag())
+        {
+            return;
+        }
         $name = $chatroom->name();
         $subject = $chatroom->subject();
         $id = $chatroom->chatroomID();
-        $sql = 'update chatroom set name = :name, subject = :subject, lastActiveDate = NOW() where chatroomID = :id';
+        $sql = 'update chatroom set subject = :subject, lastActiveDate = NOW() where chatroomID = :id';
 
         $st = $this->mysql->prepare($sql);
-        $st->bindParam(':name', $name);
         $st->bindParam(':subject', $subject);
         $st->bindParam('id', $id);
         $st->execute();
+
+        $this->updateChatroomUserList($chatroom);
         return $this->read($chatroom->chatroomID());
     }
 
     public function updateChatroomUserList(Chatroom $chatroom)
     {
-        //TODO tester
+        $chatroomID = $chatroom->chatroomID();
+        $members = $chatroom->members();
+        $sql = 'delete from chatroomUsers where chatroomID = :ID';
+        $st = $this->mysql->prepare($sql);
+        $st->bindParam(':ID',$chatroomID);
+        $st->execute();
+
+        foreach ($members as $m)
+        {
+            $uuid = $m->getUUID();
+            $sql = 'insert into chatroomUsers (chatroomID, userUUID) values (:chatroomID, :userUUID)';
+            $st = $this->mysql->prepare($sql);
+            $st->bindParam(':chatroomID',$chatroomID);
+            $st->bindParam(':userUUID',$uuid);
+            $st->execute();
+        }
+        return $this->read($chatroomID);
     }
+
 }

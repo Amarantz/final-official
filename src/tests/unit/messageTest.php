@@ -44,7 +44,6 @@ class messageTest extends \Codeception\Test\Unit
         $this->assertNull($user);
         //checks if the users object is set with the message class.
         $this->assertEquals("Bobsimpsons", $obj->getUser()->getUsername());
-        $this->assertEquals("1", $obj->userID());
         $this->assertEquals("This is some Message we might want to string shit.", $obj->getMessage());
         $this->assertStringMatchesFormat('%s', $obj->getTimestamp());
         $this->assertEquals('1', $obj->getMessageID());
