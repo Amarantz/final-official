@@ -93,6 +93,33 @@ $app->get('/chatroom/{id}',function(Request $req, Response $resp, $args){
         $resp = $resp->withAddedHeader('Error',"Invalid Key has been pushed");
         return $resp->withStatus(417);
     }
+    $cr = $this->chatroomAdapter->read($args['id']);
+
+    $cr = $this->chatroomAdapter->updateChatroom($cr);
+
+    $c = new \Domain\Chatroom();
+    $c->setSubject($cr->subject());
+    $c->setUUID($cr->uuid());
+    $c->setname($cr->name());
+    $c->setChatroomID($cr->chatroomID());
+    $members = $cr->members();
+    foreach ($members as $m) {
+        $uuid = $m->getUUID();
+        $user = $this->userAdapter->read($uuid);
+        $c->join($user);
+    }
+
+
+
+    $messages = $this->messageAdapter->read($c->chatroomID());
+    foreach ($messages as $message)
+    {
+        $c->addMessages($message);
+    }
+
+
+    $resp = $resp->withJson($c->arr());
+    return $resp->withStatus(202);
 });
 
 $app->post('/chatroom/{id}',function(Request $req, Response $resp, $args){
@@ -171,4 +198,82 @@ $app->post('/chatroom/{id}/leave',function(Request $req, Response $resp, $args){
         $resp = $resp->withHeader('Error', 'Missing Users Info');
         return $resp->withStatus(417);
     }
+
+    $cr = $this->chatroomAdapter->read($args['id']);
+
+    $user = $this->userAdapter->read($json['uuid']);
+
+    $cr->leave($user);
+
+    $cr = $this->chatroomAdapter->updateChatroom($cr);
+
+    $c = new \Domain\Chatroom();
+    $c->setSubject($cr->subject());
+    $c->setUUID($cr->uuid());
+    $c->setname($cr->name());
+    $c->setChatroomID($cr->chatroomID());
+    $members = $cr->members();
+    foreach ($members as $m) {
+        $uuid = $m->getUUID();
+        $user = $this->userAdapter->read($uuid);
+        $c->join($user);
+    }
+
+
+
+    $messages = $this->messageAdapter->read($c->chatroomID());
+    foreach ($messages as $message)
+    {
+        $c->addMessages($message);
+    }
+
+
+    $resp = $resp->withJson($c->arr());
+    return $resp->withStatus(202);
+});
+
+$app->post('/chatroom/{id}',function(Request $req, Response $resp, $args){
+    $key = $req->getHeaderLine('x-api-key');
+    if (!$this->api_key_Validation->isValidKey($key)){
+        $resp = $resp->withAddedHeader('Error',"Invalid Key has been pushed");
+        return $resp->withStatus(417);
+    }
+
+    $json = $req->getParsedBody();
+    if (!is_string($json['username']) || !is_string($json['email']) || !is_string($json['uuid']))
+    {
+        $resp = $resp->withHeader('Error', 'Missing Users Info');
+        return $resp->withStatus(417);
+    }
+    $user = $this->userAdapter->read($json['uuid']);
+    $mess = $this->newMessage;
+    if (!is_string($json['message'])) {
+        $resp = $resp->withHeader('Error', 'No message body');
+        return $resp->withStatus(417);
+    }
+    $mess->setMessage($json['message'])->setUser($user->getUsername())->setChatroomID($args['id']);
+
+    $cr = $this->chatroomAdapter->read($args['id']);
+    $this->messageAdapter->write($cr,$mess);
+    $c = new \Domain\Chatroom();
+    $c->setSubject($cr->subject());
+    $c->setUUID($cr->uuid());
+    $c->setname($cr->name());
+    $c->setChatroomID($cr->chatroomID());
+    $members = $cr->members();
+    foreach ($members as $m) {
+        $uuid = $m->getUUID();
+        $user = $this->userAdapter->read($uuid);
+        $c->join($user);
+    }
+
+    $messages = $this->messageAdapter->read($c->chatroomID());
+    foreach ($messages as $message)
+    {
+        $c->addMessages($message);
+    }
+
+
+    $resp = $resp->withJson($c->arr());
+    return $resp->withStatus(202);
 });

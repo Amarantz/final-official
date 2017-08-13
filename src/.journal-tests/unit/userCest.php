@@ -1,7 +1,7 @@
 <?php
 
 
-class roomCest
+class userCest
 {
     public function _before(UnitTester $I)
     {
